@@ -7,7 +7,14 @@
 
 /**
  * Sample test case.
+
+
+$ vagrant ssh
+$ cd $(wp plugin path --dir vk-spam-killer)
+$ bash bin/install-wp-tests.sh wordpress_test root 'wordpress' localhost latest
+
  */
+
 class SpamKillerTest extends WP_UnitTestCase {
 
 	/**
