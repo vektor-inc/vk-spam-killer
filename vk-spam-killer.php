@@ -32,6 +32,7 @@ function vksk_post_kill(){
 	
 	$update_post['post_status'] = 'trash';
 
+	// wp_update_post の前でremoveしないと save_post で無限ループになる
 	remove_action( 'save_post', 'vksk_do_action', 10, 2 );
 
 	$wp_error = wp_update_post( $update_post, true );
