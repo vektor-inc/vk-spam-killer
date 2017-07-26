@@ -58,6 +58,7 @@ function vksk_is_spam( $post_content ){
 add_filter( 'bbp_new_reply_pre_insert', 'vksk_kill_bbp_reply' );
 function vksk_kill_bbp_reply( $reply_data ){
 	if ( vksk_is_spam( $reply_data['post_content'] ) ){
+		$reply_data['post_title'] = '[SPAM] '.$reply_data['post_title'];
 		$reply_data['post_status'] = 'trash';
 	}
 	return $reply_data;
