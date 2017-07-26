@@ -30,19 +30,13 @@ class SpamKillerTest extends WP_UnitTestCase {
 			'日本語と英語が入っています English'	=> false,
 			'abcd1234' 							=> true,
 			'http://aaa.com' 					=> true,
+			'' 					                => false,
 			);
 
 		// チェック文字列をループしながら確認
 		foreach ( $test_contents as $key => $value ) {
-			$post_array = array( 
-				 'post_content' => $key,
-			);
-			// 投稿を作成する
-			$post_id = wp_insert_post( $post_array );
-			// 作成した投稿の情報を取得する
-			$post = get_post( $post_id );
-			// $postデータからスパムかどうかを判定する
-			$is_spam = vksk_is_spam( $post );
+			// スパム判定が正しいかどうか
+			$is_spam = vksk_is_spam( $key );
 			$this->assertEquals( $value, $is_spam );
 		}
 	}
