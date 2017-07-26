@@ -25,7 +25,11 @@ function vksk_post_kill(){
 
 	foreach ($post as $key => $value) {
 		$update_post[$key] = $value;
+		if ( $key == 'post_title' ) {
+			$update_post[$key] = '[SPAM] '.$value;
+		}
 	}
+	
 	$update_post['post_status'] = 'trash';
 
 	remove_action( 'save_post', 'vksk_do_action', 10, 2 );
