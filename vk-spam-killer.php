@@ -15,12 +15,16 @@
 add_action( 'save_post', 'vksk_do_action', 10, 2 );
 function vksk_do_action(){
 	global $post;
-	if ( vksk_is_spam( $post ) ){
-		vksk_post_kill();
+	if ( !$post ) return;
+
+	$post_content = $post->post_content;
+
+	if ( vksk_is_spam( $post_content ) ){
+		vksk_kill_post();
 	}
 }
 
-function vksk_post_kill(){
+function vksk_kill_post(){
 	global $post;
 
 	foreach ($post as $key => $value) {
@@ -39,14 +43,22 @@ function vksk_post_kill(){
 
 }
 
-function vksk_is_spam( $post ){
-
-	if ( ! isset( $post->post_content ) )  return;
-	$content = $post->post_content;
-
-	if ( preg_match("/[ぁ-んァ-ン一-龠]/", $content ) ) {
-		return false;
-	}else{
+function vksk_is_spam( $post_content ){
+	// 日本語が含まれていない or 空の場合
+	if ( !preg_match("/[ぁ-んァ-ン一-龠]/", $post_content ) && $post_content ) {
 		return true;
+	}else{
+		return false;
 	}
+}
+
+/*-------------------------------------------*/
+/*  bbpress reply spam
+/*-------------------------------------------*/
+add_filter( 'bbp_new_reply_pre_insert', 'vksk_kill_bbp_reply' );
+function vksk_kill_bbp_reply( $reply_data ){
+	if ( vksk_is_spam( $reply_data['post_content'] ) ){
+		$reply_data['post_status'] = 'trash';
+	}
+	return $reply_data;
 }
